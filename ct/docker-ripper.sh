@@ -6,8 +6,8 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Source: [SOURCE_URL e.g. https://github.com/example/app]
 
 # App Default Values
-APP="Docker Ripper"
-var_tags="media;docker;optical"
+APP="docker-ripper"
+var_tags="media;docker"
 var_cpu="2"
 var_ram="1024"
 var_disk="16"
