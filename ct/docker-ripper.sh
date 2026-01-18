@@ -11,15 +11,13 @@ var_install="docker-ripper-install"
 var_tags="media;docker;optical"
 
 # Defaults
-var_cpu="2"
-var_ram="1024"
-var_disk="16"
-var_os="debian"
-var_version="13"
-var_unprivileged="1"
-var_nesting="1"
-var_keyctl="1"
-var_onboot="1"
+var_tags="${var_tags:-media}"
+var_cpu="${var_cpu:-2}"
+var_ram="${var_ram:-1024}"
+var_disk="${var_disk:-10}"
+var_os="${var_os:-debian}"
+var_version="${var_version:-13}"
+var_unprivileged="${var_unprivileged:-1}"
 
 # Advanced options
 var_usb_passthrough="false"
