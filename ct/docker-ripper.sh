@@ -4,12 +4,13 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Author: Borbosch
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: [SOURCE_URL e.g. https://github.com/example/app]
-
-# App Default Values
+# App Metadata
 APP="docker-ripper"
 var_appname="docker-ripper"
 var_install="docker-ripper-install"
-var_tags="media;docker"
+var_tags="media;docker;optical"
+
+# Defaults
 var_cpu="2"
 var_ram="1024"
 var_disk="16"
@@ -20,31 +21,30 @@ var_nesting="1"
 var_keyctl="1"
 var_onboot="1"
 
-# Optional Features exposed in Advanced mode
+# Advanced options
 var_usb_passthrough="false"
 var_sata_passthrough="false"
+
+# Required arrays
+USB_DEVICES=()
+MOUNT_POINTS=()
 
 header_info "$APP"
 
 description <<EOF
-<b>$APP</b>
+Docker Ripper
 
-Docker Ripper is a containerized optical disc ripping solution.
+Containerized optical disc ripping solution.
 
 Features:
-- Automatic Docker installation
-- docker-ripper stack deployment
+- Docker auto-install
+- docker-ripper stack
 - Optional USB or SATA optical drive passthrough
 
-Default Ports:
-- 8080 (Web UI)
-
-Notes:
-- USB passthrough is recommended.
-- SATA passthrough requires exclusive device access.
+Web UI:
+- Port 8080
 EOF
 
-# This function is called automatically by the framework
 function app_setup() {
   if [[ "$var_usb_passthrough" == "true" ]]; then
     msg_info "USB passthrough enabled"
