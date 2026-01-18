@@ -6,14 +6,17 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Source: [SOURCE_URL e.g. https://github.com/example/app]
 
 # App Default Values
-APP="docker-ripper"
-var_tags="${var_tags:-[category]}"
-var_cpu="${var_cpu:-2}"
-var_ram="${var_ram:-2048}"
-var_disk="${var_disk:-8}"
-var_os="${var_os:-debian}"
-var_version="${var_version:-13}"
-var_unprivileged="${var_unprivileged:0}"
+APP="Docker Ripper"
+var_tags="media;docker;optical"
+var_cpu="2"
+var_ram="1024"
+var_disk="16"
+var_os="debian"
+var_version="13"
+var_unprivileged="1"
+var_nesting="1"
+var_keyctl="1"
+var_onboot="1"
 
 # Optional Features exposed in Advanced mode
 var_usb_passthrough="false"
