@@ -46,8 +46,6 @@ EOF
 
 # This function is called automatically by the framework
 function app_setup() {
-  echo -e "\nConfiguring passthrough options..."
-
   if [[ "$var_usb_passthrough" == "true" ]]; then
     msg_info "USB passthrough enabled"
     lsusb
