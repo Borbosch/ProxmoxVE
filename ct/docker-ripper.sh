@@ -3,64 +3,37 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Borbosch
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: [SOURCE_URL e.g. https://github.com/example/app]
-# App Metadata
-APP="docker-ripper"
-var_appname="docker-ripper"
-var_install="docker-ripper-install"
-var_tags="media;docker;optical"
+# Source: https://github.com/rix1337/docker-ripper
 
-# Defaults
-var_tags="${var_tags:-media}"
+# App Default Values
+APP="docker-ripper"
+var_tags="${var_tags:-media;docker}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-1024}"
-var_disk="${var_disk:-10}"
+var_disk="${var_disk:-16}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
-var_unprivileged="${var_unprivileged:-1}"
-
-# Advanced options
-var_usb_passthrough="false"
-var_sata_passthrough="false"
-
-# Required arrays
-USB_DEVICES=()
-MOUNT_POINTS=()
+var_unprivileged="${var_unprivileged:-0}"   # Docker benötigt privileged
 
 header_info "$APP"
+variables
+color
+catch_errors
 
-description <<EOF
-Docker Ripper
-
-Containerized optical disc ripping solution.
-
-Features:
-- Docker auto-install
-- docker-ripper stack
-- Optional USB or SATA optical drive passthrough
-
-Web UI:
-- Port 8080
-EOF
-
-function app_setup() {
-  if [[ "$var_usb_passthrough" == "true" ]]; then
-    msg_info "USB passthrough enabled"
-    lsusb
-    read -rp "Enter USB VendorID:ProductID (e.g. 152d:0578): " USB_ID
-    [[ -n "$USB_ID" ]] || msg_error "USB ID cannot be empty"
-    USB_DEVICES+=("host=$USB_ID")
-  fi
-
-  if [[ "$var_sata_passthrough" == "true" ]]; then
-    msg_info "SATA passthrough enabled"
-    lsblk -o NAME,SIZE,MODEL,TYPE
-    read -rp "Enter block device path (e.g. /dev/sr0): " SATA_DEV
-    [[ -b "$SATA_DEV" ]] || msg_error "Invalid block device"
-    MOUNT_POINTS+=("$SATA_DEV,mp=/dev/cdrom")
-  fi
+# -----------------------------------------------------------------------------
+# Optional future update handler (not yet supported for docker compose apps)
+# -----------------------------------------------------------------------------
+function update_script() {
+  header_info
+  msg_error "Update function not implemented for ${APP} (docker-compose based)."
+  exit
 }
 
 start
 build_container
-install_app
+description
+
+msg_ok "Completed successfully!\n"
+echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
+echo -e "${INFO}${YW} Access it using the following URL:${CL}"
+echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8080${CL}"

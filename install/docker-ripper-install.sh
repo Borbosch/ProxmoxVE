@@ -3,52 +3,61 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Borbosch
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: [SOURCE_URL e.g. https://github.com/example/app]
+# Source: https://github.com/rix1337/docker-ripper
 
-source /opt/scripts/install.func
+# Import Functions and Setup
+source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
+color
+verb_ip6
+catch_errors
+setting_up_container
+network_check
+update_os
 
-APP="docker-ripper"
+# =============================================================================
+# DEPENDENCIES
+# =============================================================================
+# Only install what's actually needed - base image already contains curl, sudo, mc
 
-header_info "$APP"
+msg_info "Installing Dependencies"
+$STD apt install -y \
+  git
+msg_ok "Installed Dependencies"
 
-msg_info "Updating system"
-apt-get update -y
-apt-get upgrade -y
-msg_ok "System updated"
+# =============================================================================
+# RUNTIME SETUP
+# =============================================================================
 
-msg_info "Installing dependencies"
-apt-get install -y \
-  ca-certificates \
-  curl \
-  git \
-  gnupg \
-  lsb-release
-msg_ok "Dependencies installed"
-
-msg_info "Installing Docker"
-curl -fsSL https://get.docker.com | bash
-systemctl enable docker
+msg_info "Installing Docker Engine"
+setup_docker
 msg_ok "Docker installed"
 
-msg_info "Installing docker compose plugin"
-mkdir -p /usr/local/lib/docker/cli-plugins
-curl -SL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64 \
-  -o /usr/local/lib/docker/cli-plugins/docker-compose
-chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
-msg_ok "Docker Compose installed"
+# =============================================================================
+# APPLICATION INSTALLATION
+# =============================================================================
 
-msg_info "Deploying docker-ripper"
-git clone https://github.com/rix1337/docker-ripper.git /opt/docker-ripper
-cd /opt/docker-ripper
+APP_NAME="docker-ripper"
+APP_DIR="/opt/docker-ripper"
+
+import_local_ip
+
+msg_info "Cloning docker-ripper repository"
+git clone https://github.com/rix1337/docker-ripper.git "$APP_DIR"
+cd "$APP_DIR"
+msg_ok "Repository cloned"
+
+msg_info "Starting docker-ripper stack"
 docker compose up -d
 msg_ok "docker-ripper started"
 
-msg_info "Cleaning up"
-apt-get autoremove -y
-apt-get clean
-msg_ok "Cleanup completed"
+# =============================================================================
+# FINALIZATION
+# =============================================================================
 
 motd_ssh
 customize
+cleanup_lxc
 
-msg_ok "Installation completed successfully 🎉"
+msg_ok "Docker Ripper installation completed successfully 🎉"
+echo -e "${INFO}${YW} Web UI available at:${CL}"
+echo -e "${TAB}${GATEWAY}${BGN}http://${LOCAL_IP}:8080${CL}"
