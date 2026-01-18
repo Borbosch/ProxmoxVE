@@ -7,6 +7,8 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 
 # App Default Values
 APP="docker-ripper"
+var_appname="docker-ripper"
+var_install="docker-ripper-install"
 var_tags="media;docker"
 var_cpu="2"
 var_ram="1024"
